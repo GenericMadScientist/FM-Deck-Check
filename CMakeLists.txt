@@ -5,4 +5,4 @@ project(FmStarterDeckChecker
     DESCRIPTION "A command-line tool to check FM starter decks"
     LANGUAGES CXX)
 
-add_executable(deck_check src/main.cpp)
+add_executable(deck_check src/main.cpp src/square.cpp)

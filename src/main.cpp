@@ -1,6 +1,8 @@
 #include <iostream>
 
+#include "square.h"
+
 int main()
 {
-    std::cout << "Hello, world!\n";
+    std::cout << square(10) << '\n';
 }
