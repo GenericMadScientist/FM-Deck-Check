@@ -6,3 +6,11 @@ project(FmStarterDeckChecker
     LANGUAGES CXX)
 
 add_executable(deck_check src/main.cpp src/square.cpp)
+
+include(CTest)
+
+option(PACKAGE_TESTS "Build the tests" ON)
+if(PACKAGE_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
