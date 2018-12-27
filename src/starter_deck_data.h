@@ -3,7 +3,9 @@
 #include <array>
 
 namespace deck_check {
-    constexpr std::array<int, 7> group_sizes {16, 16, 4, 1, 1, 1, 1};
+    constexpr std::array<int, 7> cumulative_group_sizes = {
+        16, 32, 36, 37, 38, 39, 40
+    };
 
     constexpr std::array<std::array<int, 2048>, 7> deck_groups() noexcept
     {

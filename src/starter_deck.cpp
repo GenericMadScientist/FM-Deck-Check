@@ -28,17 +28,14 @@ namespace deck_check {
         auto quantities = std::array<int8_t, 723>();
 
         for (auto i = 0; i < 7; ++i) {
-            auto cards_added_in_group = 0;
-            while (cards_added_in_group < group_sizes[i]) {
+            const auto group_size = cumulative_group_sizes[i];
+            while (cards_added < group_size) {
                 seed = next_seed(seed);
-                auto slot = deck_pool_slot(seed);
-                auto new_card = groups[i][slot];
+                const auto new_card = groups[i][deck_pool_slot(seed)];
                 seed = card_advances[new_card](seed);
                 if (quantities[new_card] < 3) {
-                    cards[cards_added] = new_card;
+                    cards[cards_added++] = new_card;
                     ++quantities[new_card];
-                    ++cards_added;
-                    ++cards_added_in_group;
                 }
             }
         }
