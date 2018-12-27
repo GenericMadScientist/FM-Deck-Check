@@ -52,10 +52,21 @@ namespace deck_check {
 
     bool starter_deck_filter::deck_matches(uint32_t seed) const noexcept
     {
-        const auto deck = starter_deck(seed);
+        auto cards_added = 0;
         auto quantities = std::array<int8_t, 723>();
-        for (const auto deck_card : deck)
-            ++quantities[deck_card];
+
+        for (auto i = 0; i < 7; ++i) {
+            const auto group_size = cumulative_group_sizes[i];
+            while (cards_added < group_size) {
+                seed = next_seed(seed);
+                const auto new_card = groups[i][deck_pool_slot(seed)];
+                seed = card_advances[new_card](seed);
+                if (quantities[new_card] < 3) {
+                    ++quantities[new_card];
+                    ++cards_added;
+                }
+            }
+        }
 
         return
             std::all_of(filter_cards.cbegin(), filter_cards.cend(),
