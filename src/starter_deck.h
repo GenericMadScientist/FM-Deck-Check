@@ -32,10 +32,10 @@ namespace deck_check {
     class starter_deck_filter {
     private:
         std::vector<int> filter_cards;
+        std::array<int8_t, 723> card_counts = std::array<int8_t, 723>();
         bool deck_matches(uint32_t seed) const noexcept;
     public:
-        explicit starter_deck_filter(std::vector<int> cards) :
-            filter_cards{cards} {}
+        explicit starter_deck_filter(const std::vector<int>& cards);
         std::vector<int> matching_decks(int first_frame, int numb_of_frames)
             const;
     };

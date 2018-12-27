@@ -41,16 +41,25 @@ namespace deck_check {
         }
     }
 
+    starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
+    {
+        for (const auto c : cards) {
+            if (card_counts[c] == 0)
+                filter_cards.push_back(c);
+            ++card_counts[c];
+        }
+    }
+
     bool starter_deck_filter::deck_matches(uint32_t seed) const noexcept
     {
         const auto deck = starter_deck(seed);
         auto quantities = std::array<int8_t, 723>();
         for (const auto deck_card : deck)
             ++quantities[deck_card];
-        for (const auto filter_card : filter_cards)
-            --quantities[filter_card];
-        return std::all_of(quantities.cbegin(), quantities.cend(),
-                           [](int x){ return x >= 0; });
+
+        return
+            std::all_of(filter_cards.cbegin(), filter_cards.cend(),
+                        [&](int i){ return card_counts[i] <= quantities[i]; });
     }
 
     std::vector<int> starter_deck_filter::matching_decks(int first_frame,
