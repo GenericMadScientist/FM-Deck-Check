@@ -7,9 +7,9 @@ namespace deck_check {
         16, 32, 36, 37, 38, 39, 40
     };
 
-    constexpr std::array<std::array<int, 2048>, 7> deck_groups() noexcept
+    constexpr std::array<std::array<int16_t, 2048>, 7> deck_groups() noexcept
     {
-        auto groups_list = std::array<std::array<int, 2048>, 7>();
+        auto groups_list = std::array<std::array<int16_t, 2048>, 7>();
 
         groups_list[0] = {
             9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
