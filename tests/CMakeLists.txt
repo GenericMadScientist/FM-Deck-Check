@@ -10,5 +10,10 @@ endmacro()
 
 set(SRC "${PROJECT_SOURCE_DIR}/src")
 
-package_add_test(square_tests square_tests.cpp "${SRC}/square.cpp")
-target_include_directories(square_tests PRIVATE "${SRC}")
+package_add_test(rng_unittest rng_unittest.cpp)
+target_include_directories(rng_unittest PRIVATE "${SRC}")
+
+package_add_test(starter_deck_unittest
+    starter_deck_unittest.cpp
+    "${SRC}/starter_deck.cpp")
+target_include_directories(starter_deck_unittest PRIVATE "${SRC}")
