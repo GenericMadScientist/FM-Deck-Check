@@ -29,4 +29,16 @@ namespace deck_check {
                                std::cend(seed_zero_deck),
                                std::cbegin(seed_zero_last_cards)));
     }
+
+    TEST(FilterTest, Matches)
+    {
+        const auto dh_filter = starter_deck_filter(std::vector<int>({336}));
+
+        const auto dh_decks_in_first_ten = std::vector<int>({5, 6, 7});
+        const auto dh_decks_in_later_range =
+            std::vector<int>({1006, 1007, 1008});
+
+        ASSERT_EQ(dh_filter.matching_decks(0, 10), dh_decks_in_first_ten);
+        ASSERT_EQ(dh_filter.matching_decks(1000, 10), dh_decks_in_later_range);
+    }
 }

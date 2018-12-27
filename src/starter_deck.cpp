@@ -40,4 +40,32 @@ namespace deck_check {
             }
         }
     }
+
+    bool starter_deck_filter::deck_matches(uint32_t seed) const noexcept
+    {
+        const auto deck = starter_deck(seed);
+        auto quantities = std::array<int8_t, 723>();
+        for (const auto deck_card : deck)
+            ++quantities[deck_card];
+        for (const auto filter_card : filter_cards)
+            --quantities[filter_card];
+        return std::all_of(quantities.cbegin(), quantities.cend(),
+                           [](int x){ return x >= 0; });
+    }
+
+    std::vector<int> starter_deck_filter::matching_decks(int first_frame,
+                                                         int numb_of_frames)
+        const
+    {
+        auto seed = nth_seed_after(initial_seed, first_frame);
+        auto frames = std::vector<int>();
+
+        for (auto i = 0; i < numb_of_frames; ++i) {
+            if (deck_matches(seed))
+                frames.push_back(first_frame + i);
+            seed = next_seed(seed);
+        }
+
+        return frames;
+    }
 }

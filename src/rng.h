@@ -46,4 +46,28 @@ namespace deck_check {
     {
         return (seed >> 16) & 0x7FF;
     }
+
+    constexpr uint32_t initial_seed = 0x55555555;
+
+    constexpr uint32_t nth_seed_after(uint32_t seed, int n) noexcept
+    {
+        if (n < 0) {
+            // Safe way to add 0x8000000 without integer overflow
+            n += 0x7FFFFFFF;
+            ++n;
+
+            seed += 0x80000000u;
+        }
+
+        auto advance = fm_rng_advance();
+
+        while (n > 0) {
+            if (n & 1)
+                seed = advance(seed);
+            advance *= advance;
+            n >>= 1;
+        }
+
+        return seed;
+    }
 }

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <vector>
 
 namespace deck_check {
     class starter_deck {
@@ -26,5 +27,16 @@ namespace deck_check {
         {
             return cards.cend();
         }
+    };
+
+    class starter_deck_filter {
+    private:
+        std::vector<int> filter_cards;
+        bool deck_matches(uint32_t seed) const noexcept;
+    public:
+        explicit starter_deck_filter(std::vector<int> cards) :
+            filter_cards{cards} {}
+        std::vector<int> matching_decks(int first_frame, int numb_of_frames)
+            const;
     };
 }
