@@ -5,9 +5,10 @@
 namespace deck_check {
     class LinearMap {
     private:
-        uint32_t m;
-        uint32_t i;
+        uint32_t m = 1;
+        uint32_t i = 0;
     public:
+        constexpr LinearMap() noexcept {}
         constexpr LinearMap(uint32_t mult, uint32_t inc) noexcept
         : m{mult}, i{inc} {}
 

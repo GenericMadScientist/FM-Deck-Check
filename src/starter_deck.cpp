@@ -7,6 +7,21 @@
 namespace deck_check {
     constexpr auto groups = deck_groups();
 
+    constexpr std::array<LinearMap, 723> card_rng_advances()
+    {
+        auto advances = std::array<LinearMap, 723>();
+        auto current_advance = LinearMap();
+
+        for (auto i = 0; i <= 722; ++i) {
+            advances[i] = current_advance;
+            current_advance *= fm_rng_advance();
+        }
+
+        return advances;
+    }
+
+    constexpr auto card_advances = card_rng_advances();
+
     starter_deck::starter_deck(uint32_t seed)
     {
         auto cards_added = 0;
@@ -17,9 +32,9 @@ namespace deck_check {
                 seed = next_seed(seed);
                 auto slot = deck_pool_slot(seed);
                 auto new_card = groups[i][slot];
-                for (auto j = 0; j < new_card; ++j)
-                    seed = next_seed(seed);
-                if (std::count(std::cbegin(cards), std::cbegin(cards) + cards_added,
+                seed = card_advances[new_card](seed);
+                if (std::count(std::cbegin(cards),
+                               std::cbegin(cards) + cards_added,
                                new_card) < 3) {
                     cards[cards_added] = new_card;
                     ++cards_added;

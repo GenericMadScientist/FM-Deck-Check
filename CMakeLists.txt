@@ -24,7 +24,7 @@ else()
     add_compile_options(-O3)
 endif()
 
-add_executable(deck_check src/main.cpp)
+add_executable(deck_check src/main.cpp src/starter_deck.cpp)
 
 include(CTest)
 
