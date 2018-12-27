@@ -12,7 +12,7 @@ int main()
 
     auto start = std::chrono::system_clock::now();
 
-    for (auto i = 0u; i < 100000u; ++i) {
+    for (auto i = 0u; i < 10000000u; ++i) {
         deck = deck_check::starter_deck(i);
         if (*(deck.cbegin()) == 9)
             ++count;

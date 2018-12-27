@@ -25,6 +25,7 @@ namespace deck_check {
     starter_deck::starter_deck(uint32_t seed)
     {
         auto cards_added = 0;
+        auto quantities = std::array<int8_t, 723>();
 
         for (auto i = 0; i < 7; ++i) {
             auto cards_added_in_group = 0;
@@ -33,10 +34,9 @@ namespace deck_check {
                 auto slot = deck_pool_slot(seed);
                 auto new_card = groups[i][slot];
                 seed = card_advances[new_card](seed);
-                if (std::count(std::cbegin(cards),
-                               std::cbegin(cards) + cards_added,
-                               new_card) < 3) {
+                if (quantities[new_card] < 3) {
                     cards[cards_added] = new_card;
+                    ++quantities[new_card];
                     ++cards_added;
                     ++cards_added_in_group;
                 }
