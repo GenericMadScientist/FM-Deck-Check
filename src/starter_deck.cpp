@@ -10,7 +10,7 @@ namespace deck_check {
     constexpr std::array<LinearMap, 723> card_rng_advances()
     {
         auto advances = std::array<LinearMap, 723>();
-        auto current_advance = LinearMap();
+        auto current_advance = fm_rng_advance();
 
         for (auto i = 0; i <= 722; ++i) {
             advances[i] = current_advance;
@@ -22,18 +22,24 @@ namespace deck_check {
 
     constexpr auto card_advances = card_rng_advances();
 
+    constexpr uint32_t advance_to_next_card(int card, uint32_t seed)
+    {
+        return card_advances[card](seed);
+    }
+
     starter_deck::starter_deck(uint32_t seed)
     {
         auto quantities = std::array<int8_t, 723>();
         auto cards_added = 0;
         auto cumulative_target_deck_size = 0;
 
+        seed = next_seed(seed);
+
         for (auto i = 0; i < 7; ++i) {
             cumulative_target_deck_size += group_sizes[i];
             while (cards_added < cumulative_target_deck_size) {
-                seed = next_seed(seed);
                 const auto new_card = groups[i][deck_pool_slot(seed)];
-                seed = card_advances[new_card](seed);
+                seed = advance_to_next_card(new_card, seed);
                 if (quantities[new_card] < 3) {
                     ++quantities[new_card];
                     cards[cards_added++] = new_card;
@@ -74,9 +80,8 @@ namespace deck_check {
         auto cards_added = 0;
 
         while (cards_added < group_sizes[group]) {
-            seed = next_seed(seed);
             const auto new_card = groups[group][deck_pool_slot(seed)];
-            seed = card_advances[new_card](seed);
+            seed = advance_to_next_card(new_card, seed);
             if (quantities[new_card] < 3) {
                 ++quantities[new_card];
                 ++cards_added;
@@ -91,10 +96,10 @@ namespace deck_check {
 
     bool starter_deck_filter::deck_matches(uint32_t seed) const noexcept
     {
-        auto seed_copy = seed;
+        seed = next_seed(seed);
 
         for (auto i = 0; i < 7; ++i)
-            if (!group_matches(seed_copy, i))
+            if (!group_matches(seed, i))
                 return false;
 
         return true;
