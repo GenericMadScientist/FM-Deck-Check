@@ -58,28 +58,17 @@ namespace deck_check {
         }
     }
 
-    int card_group(int card) noexcept
-    {
-        for (auto i = 0; i < 7; ++i) {
-            if (std::find(deck_groups[i].cbegin(), deck_groups[i].cend(), card)
-                != deck_groups[i].cend())
-                return i;
-        }
-
-        return -1;
-    }
-
     starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
     {
         for (const auto c : cards) {
-            if (card_counts[c] == 0) {
-                auto group = card_group(c);
-                if (group == -1)
-                    invalid_cards_in_filter = true;
-                else
-                    filter_parts[group].push_back(c);
-            }
-            ++card_counts[c];
+            auto group = -1;
+            if ((c >= 1) && (c <= 722))
+                group = card_groups[c];
+
+            if (group == -1)
+                invalid_cards_in_filter = true;
+            else if (card_counts[c]++ == 0)
+                filter_parts[group].push_back(c);
         }
 
         for (auto i = 0; i < 42; ++i)
