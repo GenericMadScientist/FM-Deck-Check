@@ -22,6 +22,18 @@ namespace deck_check {
 
     constexpr auto card_advances = card_rng_advances();
 
+    constexpr std::array<LinearMap, 42> first_group_advances()
+    {
+        auto advances = std::array<LinearMap, 42>();
+
+        for (auto i = 0; i < 42; ++i)
+            advances[i] = card_advances[first_group_members[i]];
+
+        return advances;
+    }
+
+    constexpr auto first_group_advs = first_group_advances();
+
     constexpr uint32_t advance_to_next_card(int card, uint32_t seed)
     {
         return card_advances[card](seed);
@@ -71,6 +83,30 @@ namespace deck_check {
             }
             ++card_counts[c];
         }
+
+        for (auto i = 0; i < 42; ++i)
+            first_group_card_counts[i] = card_counts[first_group_members[i]];
+    }
+
+    bool starter_deck_filter::first_group_matches(uint32_t& seed) const noexcept
+    {
+        auto quantities = std::array<int8_t, 42>();
+        auto cards_added = 0;
+
+        while (cards_added < 16) {
+            const auto new_card = first_group_pool[deck_pool_slot(seed)];
+            seed = first_group_advs[new_card](seed);
+            if (quantities[new_card] < 3) {
+                ++quantities[new_card];
+                ++cards_added;
+            }
+        }
+
+        for (auto i = 0; i < 42; ++i)
+            if (first_group_card_counts[i] > quantities[i])
+                return false;
+
+        return true;
     }
 
     bool starter_deck_filter::group_matches(uint32_t& seed, int group) const
@@ -98,7 +134,10 @@ namespace deck_check {
     {
         seed = next_seed(seed);
 
-        for (auto i = 0; i < 7; ++i)
+        if (!first_group_matches(seed))
+            return false;
+
+        for (auto i = 1; i < 7; ++i)
             if (!group_matches(seed, i))
                 return false;
 
