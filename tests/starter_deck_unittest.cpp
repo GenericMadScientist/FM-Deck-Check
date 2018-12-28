@@ -41,4 +41,16 @@ namespace deck_check {
         ASSERT_EQ(dh_filter.matching_decks(0, 10), dh_decks_in_first_ten);
         ASSERT_EQ(dh_filter.matching_decks(1000, 10), dh_decks_in_later_range);
     }
+
+    TEST(FilterTest, InvalidCards)
+    {
+        const auto mobc_filter = starter_deck_filter(std::vector<int>({722}));
+        const auto glitch_card_filter =
+            starter_deck_filter(std::vector<int>({900}));
+
+        const auto no_results = std::vector<int>();
+
+        ASSERT_EQ(mobc_filter.matching_decks(0, 100), no_results);
+        ASSERT_EQ(glitch_card_filter.matching_decks(0, 100), no_results);
+    }
 }
