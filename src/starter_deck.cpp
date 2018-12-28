@@ -5,8 +5,6 @@
 #include "starter_deck_data.h"
 
 namespace deck_check {
-    constexpr auto groups = deck_groups();
-
     constexpr std::array<LinearMap, 723> card_rng_advances()
     {
         auto advances = std::array<LinearMap, 723>();
@@ -50,7 +48,7 @@ namespace deck_check {
         for (auto i = 0; i < 7; ++i) {
             cumulative_target_deck_size += group_sizes[i];
             while (cards_added < cumulative_target_deck_size) {
-                const auto new_card = groups[i][deck_pool_slot(seed)];
+                const auto new_card = deck_groups[i][deck_pool_slot(seed)];
                 seed = advance_to_next_card(new_card, seed);
                 if (quantities[new_card] < 3) {
                     ++quantities[new_card];
@@ -63,8 +61,8 @@ namespace deck_check {
     int card_group(int card) noexcept
     {
         for (auto i = 0; i < 7; ++i) {
-            if (std::find(groups[i].cbegin(), groups[i].cend(), card)
-                != groups[i].cend())
+            if (std::find(deck_groups[i].cbegin(), deck_groups[i].cend(), card)
+                != deck_groups[i].cend())
                 return i;
         }
 
@@ -116,7 +114,7 @@ namespace deck_check {
         auto cards_added = 0;
 
         while (cards_added < group_sizes[group]) {
-            const auto new_card = groups[group][deck_pool_slot(seed)];
+            const auto new_card = deck_groups[group][deck_pool_slot(seed)];
             seed = advance_to_next_card(new_card, seed);
             if (quantities[new_card] < 3) {
                 ++quantities[new_card];
