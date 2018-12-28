@@ -31,10 +31,10 @@ namespace deck_check {
 
     class starter_deck_filter {
     private:
-        std::vector<int> filter_cards;
         std::array<int8_t, 723> card_counts = std::array<int8_t, 723>();
         std::array<std::vector<int>, 7> filter_parts;
         bool invalid_cards_in_filter = false;
+        bool group_matches(uint32_t& seed, int group) const noexcept;
         bool deck_matches(uint32_t seed) const noexcept;
     public:
         explicit starter_deck_filter(const std::vector<int>& cards);
