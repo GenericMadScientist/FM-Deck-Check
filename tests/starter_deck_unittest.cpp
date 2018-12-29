@@ -30,26 +30,6 @@ namespace deck_check {
                                std::cbegin(seed_zero_last_cards)));
     }
 
-    TEST(FilterResultTest, CheckAdd)
-    {
-        auto results = filter_results();
-        results.add_result(10);
-        results.add_result(15);
-
-        ASSERT_EQ(results.initial_results(), std::vector<int>({10, 15}));
-        ASSERT_EQ(results.numb_of_results(), 2);
-    }
-
-    TEST(FilterResultTest, CheckLimit)
-    {
-        auto results = filter_results(1);
-        results.add_result(10);
-        results.add_result(15);
-
-        ASSERT_EQ(results.initial_results(), std::vector<int>({10}));
-        ASSERT_EQ(results.numb_of_results(), 2);
-    }
-
     TEST(FilterTest, Matches)
     {
         const auto dh_filter = starter_deck_filter(std::vector<int>({336}));

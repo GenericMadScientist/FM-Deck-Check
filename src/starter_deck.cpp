@@ -140,19 +140,19 @@ namespace deck_check {
         return true;
     }
 
-    std::vector<int> starter_deck_filter::decks_in_range(int first_frame,
-                                                         int numb_of_frames)
+    filter_results starter_deck_filter::decks_in_range(int first_frame,
+                                                       int numb_of_frames)
         const
     {
         if (invalid_cards_in_filter)
-            return std::vector<int>();
+            return filter_results();
 
         auto seed = nth_seed_after(initial_seed, first_frame);
-        auto frames = std::vector<int>();
+        auto frames = filter_results();
 
         for (auto i = 0; i < numb_of_frames; ++i) {
             if (deck_matches(seed))
-                frames.push_back(first_frame + i);
+                frames.add_result(first_frame + i);
             seed = next_seed(seed);
         }
 
@@ -167,7 +167,7 @@ namespace deck_check {
         constexpr auto decks_per_task = 1000000;
         constexpr auto numb_of_tasks = (numb_of_decks - 1) / decks_per_task + 1;
 
-        auto subresults = std::array<std::vector<int>, numb_of_tasks>();
+        auto subresults = std::array<filter_results, numb_of_tasks>();
 
         #pragma omp parallel for
         for (auto i = 0; i < numb_of_frames; i += decks_per_task) {
@@ -179,13 +179,14 @@ namespace deck_check {
 
         auto total_numb_of_results = 0;
         for (const auto& v : subresults)
-            total_numb_of_results += v.size();
+            total_numb_of_results += v.initial_results().size();
 
         auto results = std::vector<int>();
         results.reserve(total_numb_of_results);
 
         for (const auto& v : subresults)
-            results.insert(results.end(), v.cbegin(), v.cend());
+            results.insert(results.end(), v.initial_results().cbegin(),
+                           v.initial_results().cend());
 
         std::sort(results.begin(), results.end());
 
