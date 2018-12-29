@@ -17,13 +17,6 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-# Set optimisation flags
-if(MSVC)
-    add_compile_options(/O2)
-else()
-    add_compile_options(-O3)
-endif()
-
 find_package(OpenMP REQUIRED)
 add_executable(deck_check src/main.cpp src/starter_deck.cpp)
 target_link_libraries(deck_check PRIVATE OpenMP::OpenMP_CXX)

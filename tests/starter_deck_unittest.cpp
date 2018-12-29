@@ -39,7 +39,8 @@ namespace deck_check {
             std::vector<int>({1006, 1007, 1008});
 
         ASSERT_EQ(dh_filter.matching_decks(0, 10), dh_decks_in_first_ten);
-        ASSERT_EQ(dh_filter.matching_decks(1000, 10), dh_decks_in_later_range);
+        ASSERT_EQ(dh_filter.matching_decks(1000, 10),
+                  dh_decks_in_later_range);
     }
 
     TEST(FilterTest, InvalidCards)

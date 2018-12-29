@@ -133,8 +133,7 @@ namespace deck_check {
     }
 
     std::vector<int> starter_deck_filter::decks_in_range(int first_frame,
-                                                         int numb_of_frames,
-                                                         int limit)
+                                                         int numb_of_frames)
         const
     {
         if (invalid_cards_in_filter)
@@ -153,8 +152,7 @@ namespace deck_check {
     }
 
     std::vector<int> starter_deck_filter::matching_decks(int first_frame,
-                                                         int numb_of_frames,
-                                                         int limit)
+                                                         int numb_of_frames)
         const
     {
         constexpr auto numb_of_decks = 134217728;
@@ -168,8 +166,7 @@ namespace deck_check {
             const auto frames_in_subjob = std::min(decks_per_task,
                                                    numb_of_frames - i);
             subresults[i / decks_per_task] = decks_in_range(first_frame + i,
-                                                            frames_in_subjob,
-                                                            limit);
+                                                            frames_in_subjob);
         }
 
         auto total_numb_of_results = 0;
