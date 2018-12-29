@@ -67,6 +67,16 @@ namespace deck_check {
         ++results;
     }
 
+    void filter_results::add_result_set(const filter_results& rhs)
+    {
+        const auto capacity = std::max(max_numb_of_stored_results - results, 0);
+        const auto numb_to_add =
+            std::min(static_cast<int>(rhs.first_results.size()), capacity);
+        first_results.insert(first_results.end(), rhs.first_results.cbegin(),
+                             rhs.first_results.cbegin() + numb_to_add);
+        results += rhs.results;
+    }
+
     starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
     {
         for (const auto c : cards) {
@@ -159,8 +169,8 @@ namespace deck_check {
         return frames;
     }
 
-    std::vector<int> starter_deck_filter::matching_decks(int first_frame,
-                                                         int numb_of_frames)
+    filter_results starter_deck_filter::matching_decks(int first_frame,
+                                                       int numb_of_frames)
         const
     {
         constexpr auto numb_of_decks = 134217728;
@@ -177,18 +187,10 @@ namespace deck_check {
                                                             frames_in_subjob);
         }
 
-        auto total_numb_of_results = 0;
-        for (const auto& v : subresults)
-            total_numb_of_results += v.initial_results().size();
-
-        auto results = std::vector<int>();
-        results.reserve(total_numb_of_results);
+        auto results = filter_results();
 
         for (const auto& v : subresults)
-            results.insert(results.end(), v.initial_results().cbegin(),
-                           v.initial_results().cend());
-
-        std::sort(results.begin(), results.end());
+            results.add_result_set(v);
 
         return results;
     }

@@ -37,6 +37,7 @@ namespace deck_check {
         int results = 0;
         std::vector<int> first_results;
         void add_result(int result);
+        void add_result_set(const filter_results& rhs);
         friend class starter_deck_filter;
     public:
         explicit filter_results(int limit = 1000)
@@ -61,7 +62,7 @@ namespace deck_check {
             const;
     public:
         explicit starter_deck_filter(const std::vector<int>& cards);
-        std::vector<int> matching_decks(int first_frame, int numb_of_frames)
+        filter_results matching_decks(int first_frame, int numb_of_frames)
             const;
     };
 }

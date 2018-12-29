@@ -16,6 +16,6 @@ int main()
     auto elapsed =
         std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    std::cout << filter_results.size() << '\n';
+    std::cout << filter_results.numb_of_results() << '\n';
     std::cout << elapsed.count() << "ms taken\n";
 }
