@@ -1,21 +1,18 @@
 #include <chrono>
 #include <iostream>
 
+#include "cxxopts.hpp"
+
 #include "starter_deck.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    std::cout << "Hello, World!\n";
+    cxxopts::Options options("FM Deck Check", "Checks FM decks.");
 
-    auto start = std::chrono::system_clock::now();
+    options.add_options()
+        ("h,help", "Print help and exit.")
+        ;
 
-    auto filter = deck_check::starter_deck_filter(std::vector<int>({123, 123, 137, 158, 161, 167, 178, 192}));
-    auto filter_results = filter.matching_decks(0, 134217728);
-
-    auto end = std::chrono::system_clock::now();
-    auto elapsed =
-        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-    std::cout << filter_results.numb_of_results() << '\n';
-    std::cout << elapsed.count() << "ms taken\n";
+    auto result = options.parse(argc, argv);
+    std::cout << result["h"].as<bool>() << '\n';
 }
