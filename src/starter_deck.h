@@ -2,7 +2,6 @@
 
 #include <array>
 #include <cstdint>
-#include <stdexcept>
 #include <vector>
 
 namespace deck_check {
@@ -27,6 +26,22 @@ namespace deck_check {
         constexpr const_iterator cend() const noexcept
         {
             return cards.cend();
+        }
+    };
+
+    class filter_results {
+    private:
+        const int max_numb_of_stored_results;
+        int results = 0;
+        std::vector<int> first_results;
+    public:
+        explicit filter_results(int limit = 1000)
+            : max_numb_of_stored_results{limit} {}
+        void add_result(int result);
+        int numb_of_results() const noexcept { return results; }
+        const std::vector<int>& initial_results() const noexcept
+        {
+            return first_results;
         }
     };
 

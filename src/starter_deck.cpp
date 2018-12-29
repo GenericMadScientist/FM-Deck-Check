@@ -59,6 +59,14 @@ namespace deck_check {
         }
     }
 
+    void filter_results::add_result(int result)
+    {
+        if (static_cast<int>(first_results.size()) < max_numb_of_stored_results)
+            first_results.push_back(result);
+
+        ++results;
+    }
+
     starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
     {
         for (const auto c : cards) {
