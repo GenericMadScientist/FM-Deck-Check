@@ -174,7 +174,7 @@ namespace deck_check {
         const
     {
         constexpr auto numb_of_decks = 134217728;
-        constexpr auto decks_per_task = 1000000;
+        constexpr auto decks_per_task = 1048576;
         constexpr auto numb_of_tasks = (numb_of_decks - 1) / decks_per_task + 1;
 
         auto subresults = std::array<filter_results, numb_of_tasks>();
