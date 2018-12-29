@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <stdexcept>
 #include <vector>
 
 namespace deck_check {
@@ -38,6 +39,8 @@ namespace deck_check {
         bool first_group_matches(uint32_t& seed) const noexcept;
         bool group_matches(uint32_t& seed, int group) const noexcept;
         bool deck_matches(uint32_t seed) const noexcept;
+        std::vector<int> decks_in_range(int first_frame, int numb_of_frames)
+            const;
     public:
         explicit starter_deck_filter(const std::vector<int>& cards);
         std::vector<int> matching_decks(int first_frame, int numb_of_frames)

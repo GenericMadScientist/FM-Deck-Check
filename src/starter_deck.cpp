@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <numeric>
 
 #include "rng.h"
 #include "starter_deck.h"
@@ -131,8 +132,9 @@ namespace deck_check {
         return true;
     }
 
-    std::vector<int> starter_deck_filter::matching_decks(int first_frame,
-                                                         int numb_of_frames)
+    std::vector<int> starter_deck_filter::decks_in_range(int first_frame,
+                                                         int numb_of_frames,
+                                                         int limit)
         const
     {
         if (invalid_cards_in_filter)
@@ -148,5 +150,40 @@ namespace deck_check {
         }
 
         return frames;
+    }
+
+    std::vector<int> starter_deck_filter::matching_decks(int first_frame,
+                                                         int numb_of_frames,
+                                                         int limit)
+        const
+    {
+        constexpr auto numb_of_decks = 134217728;
+        constexpr auto decks_per_task = 1000000;
+        constexpr auto numb_of_tasks = (numb_of_decks - 1) / decks_per_task + 1;
+
+        auto subresults = std::array<std::vector<int>, numb_of_tasks>();
+
+        #pragma omp parallel for
+        for (auto i = 0; i < numb_of_frames; i += decks_per_task) {
+            const auto frames_in_subjob = std::min(decks_per_task,
+                                                   numb_of_frames - i);
+            subresults[i / decks_per_task] = decks_in_range(first_frame + i,
+                                                            frames_in_subjob,
+                                                            limit);
+        }
+
+        auto total_numb_of_results = 0;
+        for (const auto& v : subresults)
+            total_numb_of_results += v.size();
+
+        auto results = std::vector<int>();
+        results.reserve(total_numb_of_results);
+
+        for (const auto& v : subresults)
+            results.insert(results.end(), v.cbegin(), v.cend());
+
+        std::sort(results.begin(), results.end());
+
+        return results;
     }
 }
