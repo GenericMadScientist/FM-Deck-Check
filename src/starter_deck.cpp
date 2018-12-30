@@ -194,4 +194,10 @@ namespace deck_check {
 
         return results;
     }
+
+    filter_results starter_deck_filter::all_matching_decks() const
+    {
+        constexpr auto numb_of_decks = 134217728;
+        return matching_decks(0, numb_of_decks);
+    }
 }

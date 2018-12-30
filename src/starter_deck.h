@@ -64,5 +64,6 @@ namespace deck_check {
         explicit starter_deck_filter(const std::vector<int>& cards);
         filter_results matching_decks(int first_frame, int numb_of_frames)
             const;
+        filter_results all_matching_decks() const;
     };
 }

@@ -4,7 +4,6 @@
 #include "cxxopts.hpp"
 
 #include "options.h"
-#include "starter_deck.h"
 
 int main(int argc, char* argv[])
 {
