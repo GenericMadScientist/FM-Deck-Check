@@ -13,7 +13,9 @@ than Windows, either compile it yourself or ask me.
 This is a very simple command-line program. Open up cmd, cd to the directory the
 program is in, and enter the known cards like so:
 
+```
 deck_check,exe -c 100 -c 100 -c 8 -c 337
+```
 
 After a few moments the program will print out the number of seeds that match.
 If all the matching seeds give the same deck, the list of seeds will be printed
