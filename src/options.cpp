@@ -9,8 +9,6 @@
 #include "rng.h"
 #include "starter_deck.h"
 
-#include <string>
-
 namespace deck_check {
     cxxopts::Options program_options()
     {
@@ -42,14 +40,10 @@ namespace deck_check {
 
         std::cout << "\nCards: \n";
 
-        const auto first_seed = nth_seed_after(initial_seed,
-                                               results.initial_results()[0]);
-        const auto deck = starter_deck(first_seed);
-        auto deck_copy = std::array<int, 40>();
-        std::copy(deck.cbegin(), deck.cend(), deck_copy.begin());
-        std::sort(deck_copy.begin(), deck_copy.end());
+        auto deck = starter_deck(results.initial_results()[0]);
+        std::sort(deck.begin(), deck.end());
 
-        for (const auto card : deck_copy)
+        for (const auto card : deck)
             print_card(card);
     }
 

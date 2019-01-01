@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 namespace deck_check {
@@ -70,4 +71,26 @@ namespace deck_check {
 
         return seed;
     }
+
+    constexpr std::array<LinearMap, 723> card_rng_advances()
+    {
+        auto advances = std::array<LinearMap, 723>();
+        auto current_advance = fm_rng_advance();
+
+        for (auto i = 0; i <= 722; ++i) {
+            advances[i] = current_advance;
+            current_advance *= fm_rng_advance();
+        }
+
+        return advances;
+    }
+
+    constexpr std::array<LinearMap, 723> card_advances = card_rng_advances();
+
+    constexpr uint32_t advance_to_next_card(int card, uint32_t seed)
+    {
+        return card_advances[card](seed);
+    }
+
+    std::array<int, 40> starter_deck(int frame_number);
 }

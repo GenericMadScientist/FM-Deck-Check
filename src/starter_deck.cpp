@@ -6,21 +6,6 @@
 #include "starter_deck_data.h"
 
 namespace deck_check {
-    constexpr std::array<LinearMap, 723> card_rng_advances()
-    {
-        auto advances = std::array<LinearMap, 723>();
-        auto current_advance = fm_rng_advance();
-
-        for (auto i = 0; i <= 722; ++i) {
-            advances[i] = current_advance;
-            current_advance *= fm_rng_advance();
-        }
-
-        return advances;
-    }
-
-    constexpr auto card_advances = card_rng_advances();
-
     constexpr std::array<LinearMap, 42> first_group_advances()
     {
         auto advances = std::array<LinearMap, 42>();
@@ -32,32 +17,6 @@ namespace deck_check {
     }
 
     constexpr auto first_group_advs = first_group_advances();
-
-    constexpr uint32_t advance_to_next_card(int card, uint32_t seed)
-    {
-        return card_advances[card](seed);
-    }
-
-    starter_deck::starter_deck(uint32_t seed)
-    {
-        auto quantities = std::array<int8_t, 723>();
-        auto cards_added = 0;
-        auto cumulative_target_deck_size = 0;
-
-        seed = next_seed(seed);
-
-        for (auto i = 0; i < 7; ++i) {
-            cumulative_target_deck_size += group_sizes[i];
-            while (cards_added < cumulative_target_deck_size) {
-                const auto new_card = deck_groups[i][deck_pool_slot(seed)];
-                seed = advance_to_next_card(new_card, seed);
-                if (quantities[new_card] < 3) {
-                    ++quantities[new_card];
-                    cards[cards_added++] = new_card;
-                }
-            }
-        }
-    }
 
     void filter_results::add_result(int result)
     {
@@ -100,8 +59,7 @@ namespace deck_check {
         auto counts = std::array<std::array<int, 3>, 723>();
 
         for (const auto frame : frames) {
-            const auto seed = nth_seed_after(initial_seed, frame);
-            const auto deck = starter_deck(seed);
+            const auto deck = starter_deck(frame);
             auto deck_counts = std::array<int8_t, 723>();
             for (const auto card : deck)
                 ++deck_counts[card];

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "gtest/gtest.h"
 
 #include "rng.h"
@@ -59,5 +61,23 @@ namespace deck_check {
         ASSERT_EQ(nth_seed_after(initial_seed, 1000000), 0xFF60ED15u);
         ASSERT_EQ(nth_seed_after(0, 0), 0u);
         ASSERT_EQ(nth_seed_after(0, 1000000), 0xA4AFD2C0u);
+    }
+
+    TEST(StarterDeckTest, LastFourCards)
+    {
+        const auto first_deck = starter_deck(0);
+        const auto seed_zero_deck = starter_deck(-1199997605);
+
+        constexpr auto first_deck_last_cards =
+            std::array<int, 4>({221, 337, 332, 309});
+        constexpr auto seed_zero_last_cards =
+            std::array<int, 4>({115, 337, 334, 659});
+
+        ASSERT_TRUE(std::equal(std::cbegin(first_deck) + 36,
+                               std::cend(first_deck),
+                               std::cbegin(first_deck_last_cards)));
+        ASSERT_TRUE(std::equal(std::cbegin(seed_zero_deck) + 36,
+                               std::cend(seed_zero_deck),
+                               std::cbegin(seed_zero_last_cards)));
     }
 }
