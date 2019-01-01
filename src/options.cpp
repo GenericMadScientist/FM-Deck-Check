@@ -49,7 +49,7 @@ namespace deck_check {
 
     static void print_hints_or_deck(const filter_results& results)
     {
-        if (results.numb_of_results() == 0)
+        if (results.num_of_results() == 0)
             return;
 
         auto hints = helpful_hints(results.initial_results());
@@ -83,10 +83,10 @@ namespace deck_check {
             const auto filter = starter_deck_filter(cards);
             const auto results = filter.all_matching_decks();
 
-            if (results.numb_of_results() == 1)
+            if (results.num_of_results() == 1)
                 std::cout << "\nThere is 1 matching seed.\n";
             else
-                std::cout << "\nThere are " << results.numb_of_results()
+                std::cout << "\nThere are " << results.num_of_results()
                           << " matching seeds.\n";
 
             print_hints_or_deck(results);

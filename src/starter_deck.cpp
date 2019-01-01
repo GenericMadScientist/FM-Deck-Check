@@ -91,7 +91,7 @@ namespace deck_check {
     }
 
     filter_results starter_deck_filter::decks_in_range(int first_frame,
-                                                       int numb_of_frames)
+                                                       int num_of_frames)
         const
     {
         if (invalid_cards_in_filter)
@@ -100,7 +100,7 @@ namespace deck_check {
         auto seed = nth_seed(first_frame);
         auto frames = filter_results();
 
-        for (auto i = 0; i < numb_of_frames; ++i) {
+        for (auto i = 0; i < num_of_frames; ++i) {
             if (deck_matches(seed))
                 frames.add_result(first_frame + i);
             seed = next_seed(seed);
@@ -110,19 +110,19 @@ namespace deck_check {
     }
 
     filter_results starter_deck_filter::matching_decks(int first_frame,
-                                                       int numb_of_frames)
+                                                       int num_of_frames)
         const
     {
-        constexpr auto numb_of_decks = 134217728;
+        constexpr auto num_of_decks = 134217728;
         constexpr auto decks_per_task = 1048576;
-        constexpr auto numb_of_tasks = (numb_of_decks - 1) / decks_per_task + 1;
+        constexpr auto num_of_tasks = (num_of_decks - 1) / decks_per_task + 1;
 
-        auto subresults = std::array<filter_results, numb_of_tasks>();
+        auto subresults = std::array<filter_results, num_of_tasks>();
 
         #pragma omp parallel for
-        for (auto i = 0; i < numb_of_frames; i += decks_per_task) {
+        for (auto i = 0; i < num_of_frames; i += decks_per_task) {
             const auto frames_in_subjob = std::min(decks_per_task,
-                                                   numb_of_frames - i);
+                                                   num_of_frames - i);
             subresults[i / decks_per_task] = decks_in_range(first_frame + i,
                                                             frames_in_subjob);
         }
@@ -137,13 +137,13 @@ namespace deck_check {
 
     filter_results starter_deck_filter::all_matching_decks() const
     {
-        constexpr auto numb_of_decks = 134217728;
-        return matching_decks(0, numb_of_decks);
+        constexpr auto num_of_decks = 134217728;
+        return matching_decks(0, num_of_decks);
     }
 
     void filter_results::add_result(int result)
     {
-        if (static_cast<int>(first_results.size()) < max_numb_of_stored_results)
+        if (static_cast<int>(first_results.size()) < max_num_of_stored_results)
             first_results.push_back(result);
 
         ++results;
@@ -151,11 +151,11 @@ namespace deck_check {
 
     void filter_results::add_result_set(const filter_results& rhs)
     {
-        const auto capacity = std::max(max_numb_of_stored_results - results, 0);
-        const auto numb_to_add =
+        const auto capacity = std::max(max_num_of_stored_results - results, 0);
+        const auto num_to_add =
             std::min(static_cast<int>(rhs.first_results.size()), capacity);
         first_results.insert(first_results.end(), rhs.first_results.cbegin(),
-                             rhs.first_results.cbegin() + numb_to_add);
+                             rhs.first_results.cbegin() + num_to_add);
         results += rhs.results;
     }
 

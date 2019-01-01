@@ -16,18 +16,18 @@ namespace deck_check {
         bool first_group_matches(uint32_t& seed) const noexcept;
         bool group_matches(uint32_t& seed, int group) const noexcept;
         bool deck_matches(uint32_t seed) const noexcept;
-        filter_results decks_in_range(int first_frame, int numb_of_frames)
+        filter_results decks_in_range(int first_frame, int num_of_frames)
             const;
     public:
         explicit starter_deck_filter(const std::vector<int>& cards);
-        filter_results matching_decks(int first_frame, int numb_of_frames)
+        filter_results matching_decks(int first_frame, int num_of_frames)
             const;
         filter_results all_matching_decks() const;
     };
 
     class filter_results {
     private:
-        int max_numb_of_stored_results; // Not const to allow copy assignment.
+        int max_num_of_stored_results; // Not const to allow copy assignment.
         int results = 0;
         std::vector<int> first_results;
         void add_result(int result);
@@ -35,8 +35,8 @@ namespace deck_check {
         friend class starter_deck_filter;
     public:
         explicit filter_results(int limit = 1000)
-            : max_numb_of_stored_results{limit} {}
-        int numb_of_results() const noexcept { return results; }
+            : max_num_of_stored_results{limit} {}
+        int num_of_results() const noexcept { return results; }
         const std::vector<int>& initial_results() const noexcept
         {
             return first_results;
