@@ -6,7 +6,7 @@
 #include "starter_deck_data.h"
 
 namespace deck_check {
-    constexpr std::array<LinearMap, 42> first_group_advances()
+    static constexpr std::array<LinearMap, 42> first_group_advances()
     {
         auto advances = std::array<LinearMap, 42>();
 
@@ -42,7 +42,7 @@ namespace deck_check {
         int8_t separation_power;
     };
 
-    bool freq_rating_comp(const frequency_rating& lhs,
+    static bool freq_rating_comp(const frequency_rating& lhs,
                           const frequency_rating& rhs) noexcept
     {
         if (lhs.separation_power != rhs.separation_power)

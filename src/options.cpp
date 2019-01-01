@@ -24,14 +24,14 @@ namespace deck_check {
         return options;
     }
 
-    void print_card(int card)
+    static void print_card(int card)
     {
         std::cout << std::setfill('0') << std::setw(3) << card
                   << std::setfill(' ')
                   << ' ' << card_names[card] << '\n';
     }
 
-    void print_found_deck(const filter_results& results)
+    static void print_found_deck(const filter_results& results)
     {
         std::cout << "The deck has been found!\n\n"
                   << "Matching seeds:\n";
@@ -47,7 +47,7 @@ namespace deck_check {
             print_card(card);
     }
 
-    void print_hints_or_deck(const filter_results& results)
+    static void print_hints_or_deck(const filter_results& results)
     {
         if (results.numb_of_results() == 0)
             return;
