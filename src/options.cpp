@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "card_names.h"
+#include "deck_filter.h"
 #include "options.h"
 #include "rng.h"
-#include "starter_deck.h"
 
 namespace deck_check {
     cxxopts::Options program_options()

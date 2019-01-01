@@ -13,9 +13,9 @@ set(SRC "${PROJECT_SOURCE_DIR}/src")
 package_add_test(rng_unittest rng_unittest.cpp "${SRC}/rng.cpp")
 target_include_directories(rng_unittest PRIVATE "${SRC}")
 
-package_add_test(starter_deck_unittest
-    starter_deck_unittest.cpp
+package_add_test(deck_filter_unittest
+    deck_filter_unittest.cpp
     "${SRC}/rng.cpp"
-    "${SRC}/starter_deck.cpp")
-target_link_libraries(starter_deck_unittest PRIVATE OpenMP::OpenMP_CXX)
-target_include_directories(starter_deck_unittest PRIVATE "${SRC}")
+    "${SRC}/deck_filter.cpp")
+target_link_libraries(deck_filter_unittest PRIVATE OpenMP::OpenMP_CXX)
+target_include_directories(deck_filter_unittest PRIVATE "${SRC}")

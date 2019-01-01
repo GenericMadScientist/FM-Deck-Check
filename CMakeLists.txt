@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(FmStarterDeckChecker
-    VERSION 0.1
+    VERSION 1.0
     DESCRIPTION "A command-line tool to check FM starter decks"
     LANGUAGES CXX)
 
@@ -19,8 +19,8 @@ endif()
 
 find_package(OpenMP REQUIRED)
 add_subdirectory("extern/cxxopts")
-add_executable(deck_check src/main.cpp src/options.cpp src/rng.cpp
-    src/starter_deck.cpp)
+add_executable(deck_check src/deck_filter.cpp src/main.cpp src/options.cpp
+    src/rng.cpp)
 target_link_libraries(deck_check PRIVATE OpenMP::OpenMP_CXX cxxopts)
 
 include(CTest)

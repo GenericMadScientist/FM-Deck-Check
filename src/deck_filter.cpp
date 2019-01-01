@@ -2,8 +2,8 @@
 #include <numeric>
 #include <tuple>
 
+#include "deck_filter.h"
 #include "rng.h"
-#include "starter_deck.h"
 #include "starter_deck_data.h"
 
 namespace deck_check {

@@ -3,7 +3,7 @@
 
 #include "gtest/gtest.h"
 
-#include "starter_deck.h"
+#include "deck_filter.h"
 
 namespace deck_check {
     TEST(FilterTest, Matches)
