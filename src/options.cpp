@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <array>
+#include <iomanip>
 #include <iostream>
 #include <vector>
 
@@ -24,17 +25,19 @@ namespace deck_check {
 
     void print_card(int card)
     {
-        std::cout << card << '\n';
+        std::cout << std::setfill('0') << std::setw(3) << card
+                  << std::setfill(' ')
+                  << ' ' << "Card name " << '\n';
     }
 
     void print_found_deck(const filter_results& results)
     {
-        std::cout << "The deck has been found!\n"
+        std::cout << "The deck has been found!\n\n"
                   << "Matching seeds:\n";
         for (const auto frame : results.initial_results())
             std::cout << "Seed " << frame << '\n';
 
-        std::cout << "Cards: \n";
+        std::cout << "\nCards: \n";
 
         const auto first_seed = nth_seed_after(initial_seed,
                                                results.initial_results()[0]);
@@ -49,13 +52,16 @@ namespace deck_check {
 
     void print_hints_or_deck(const filter_results& results)
     {
+        if (results.numb_of_results() == 0)
+            return;
+
         auto hints = helpful_hints(results.initial_results());
 
         if (hints.empty())
             print_found_deck(results);
         else {
-            std::cout << "There is more than one possible deck. "
-                      << "Here are some cards that can help.\n";
+            std::cout << "\nThere is more than one possible deck. "
+                      << "Here are some cards that can help.\n\n";
             constexpr auto max_hints = 10ull;
             const auto num_of_hints = std::min(max_hints, hints.size());
 
@@ -79,14 +85,15 @@ namespace deck_check {
             std::cout << "Please wait..." << std::endl;
             const auto filter = starter_deck_filter(cards);
             const auto results = filter.all_matching_decks();
+            std::cout << '\n';
+
             if (results.numb_of_results() == 1)
-                std::cout << "There is one matching seed.";
+                std::cout << "There is one matching seed.\n";
             else
                 std::cout << "There are " << results.numb_of_results()
                           << " matching seeds.\n";
             print_hints_or_deck(results);
-            std::cout << std::endl;
         } else
-            std::cout << "Please enter at least one card." << std::endl;
+            std::cout << "Please enter at least one card.\n" << std::endl;
     }
 }
