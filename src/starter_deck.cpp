@@ -1,12 +1,13 @@
 #include <algorithm>
 #include <numeric>
+#include <tuple>
 
 #include "rng.h"
 #include "starter_deck.h"
 #include "starter_deck_data.h"
 
 namespace deck_check {
-    static constexpr std::array<LinearMap, 42> first_group_advances()
+    constexpr auto first_group_advs = []()
     {
         auto advances = std::array<LinearMap, 42>();
 
@@ -14,89 +15,7 @@ namespace deck_check {
             advances[i] = card_advances[first_group_members[i]];
 
         return advances;
-    }
-
-    constexpr auto first_group_advs = first_group_advances();
-
-    void filter_results::add_result(int result)
-    {
-        if (static_cast<int>(first_results.size()) < max_numb_of_stored_results)
-            first_results.push_back(result);
-
-        ++results;
-    }
-
-    void filter_results::add_result_set(const filter_results& rhs)
-    {
-        const auto capacity = std::max(max_numb_of_stored_results - results, 0);
-        const auto numb_to_add =
-            std::min(static_cast<int>(rhs.first_results.size()), capacity);
-        first_results.insert(first_results.end(), rhs.first_results.cbegin(),
-                             rhs.first_results.cbegin() + numb_to_add);
-        results += rhs.results;
-    }
-
-    struct frequency_rating {
-        int16_t card;
-        int8_t quantity;
-        int8_t separation_power;
-    };
-
-    static bool freq_rating_comp(const frequency_rating& lhs,
-                          const frequency_rating& rhs) noexcept
-    {
-        if (lhs.separation_power != rhs.separation_power)
-            return lhs.separation_power < rhs.separation_power;
-
-        if (lhs.card != rhs.card)
-            return lhs.card < rhs.card;
-
-        return lhs.quantity < rhs.quantity;
-    }
-
-    std::vector<int> helpful_hints(const std::vector<int>& frames)
-    {
-        auto counts = std::array<std::array<int, 3>, 723>();
-
-        for (const auto frame : frames) {
-            const auto deck = starter_deck(frame);
-            auto deck_counts = std::array<int8_t, 723>();
-            for (const auto card : deck)
-                ++deck_counts[card];
-            for (auto i = 1; i < 723; ++i)
-                for (auto j = 0; j < deck_counts[i]; ++j)
-                    ++counts[i][j];
-        }
-
-        auto ratings = std::vector<frequency_rating>();
-
-        for (auto i = 0; i < 723; ++i)
-            for (auto j = 0; j < 3; ++j) {
-                const auto count = counts[i][j];
-                const auto usefulness =
-                    std::min(count,
-                             static_cast<int>(frames.size()) - count);
-                if (usefulness > 0) {
-                    auto rating = frequency_rating();
-                    rating.card = i;
-                    rating.quantity = j + 1;
-                    rating.separation_power = usefulness;
-                    ratings.push_back(rating);
-                }
-            }
-
-        std::sort(ratings.begin(), ratings.end(), freq_rating_comp);
-
-        auto hints = std::vector<int>();
-
-        for (const auto& rating : ratings) {
-            const auto card = rating.card;
-            if (std::find(hints.cbegin(), hints.cend(), card) == hints.cend())
-                hints.push_back(card);
-        }
-
-        return hints;
-    }
+    }();
 
     starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
     {
@@ -220,5 +139,96 @@ namespace deck_check {
     {
         constexpr auto numb_of_decks = 134217728;
         return matching_decks(0, numb_of_decks);
+    }
+
+    void filter_results::add_result(int result)
+    {
+        if (static_cast<int>(first_results.size()) < max_numb_of_stored_results)
+            first_results.push_back(result);
+
+        ++results;
+    }
+
+    void filter_results::add_result_set(const filter_results& rhs)
+    {
+        const auto capacity = std::max(max_numb_of_stored_results - results, 0);
+        const auto numb_to_add =
+            std::min(static_cast<int>(rhs.first_results.size()), capacity);
+        first_results.insert(first_results.end(), rhs.first_results.cbegin(),
+                             rhs.first_results.cbegin() + numb_to_add);
+        results += rhs.results;
+    }
+
+    struct frequency_rating {
+        int16_t card;
+        int8_t quantity;
+        int8_t separation_power;
+        bool operator<(const frequency_rating& rhs) const noexcept
+        {
+            return std::tie(separation_power, card, quantity)
+                < std::tie(rhs.separation_power, rhs.card, rhs.quantity);
+        }
+    };
+
+    static std::array<std::array<int, 3>, 723>
+    counts_for_ratings(const std::vector<int>& frames)
+    {
+        auto counts = std::array<std::array<int, 3>, 723>();
+
+        for (const auto frame : frames) {
+            const auto deck = starter_deck(frame);
+            auto deck_counts = std::array<int8_t, 723>();
+            for (const auto card : deck)
+                ++deck_counts[card];
+            for (auto i = 1; i < 723; ++i)
+                for (auto j = 0; j < deck_counts[i]; ++j)
+                    ++counts[i][j];
+        }
+
+        return counts;
+    }
+
+    static std::vector<frequency_rating>
+    ratings_from_counts(const std::array<std::array<int, 3>, 723>& counts,
+                        int num_of_frames)
+    {
+        auto ratings = std::vector<frequency_rating>();
+
+        for (auto i = 0; i < 723; ++i)
+            for (auto j = 0; j < 3; ++j) {
+                const auto count = counts[i][j];
+                const auto usefulness = std::min(count, num_of_frames - count);
+                if (usefulness > 0) {
+                    auto rating = frequency_rating();
+                    rating.card = i;
+                    rating.quantity = j + 1;
+                    rating.separation_power = usefulness;
+                    ratings.push_back(rating);
+                }
+            }
+
+        std::sort(ratings.begin(), ratings.end());
+        return ratings;
+    }
+
+    static std::vector<int>
+    hints_from_ratings(const std::vector<frequency_rating>& ratings)
+    {
+        auto hints = std::vector<int>();
+
+        for (const auto& rating : ratings) {
+            const auto card = rating.card;
+            if (std::find(hints.cbegin(), hints.cend(), card) == hints.cend())
+                hints.push_back(card);
+        }
+
+        return hints;
+    }
+
+    std::vector<int> helpful_hints(const std::vector<int>& frames)
+    {
+        const auto counts = counts_for_ratings(frames);
+        const auto ratings = ratings_from_counts(counts, frames.size());
+        return hints_from_ratings(ratings);
     }
 }
