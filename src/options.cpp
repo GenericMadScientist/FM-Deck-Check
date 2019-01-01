@@ -4,9 +4,12 @@
 #include <iostream>
 #include <vector>
 
+#include "card_names.h"
 #include "options.h"
 #include "rng.h"
 #include "starter_deck.h"
+
+#include <string>
 
 namespace deck_check {
     cxxopts::Options program_options()
@@ -27,7 +30,7 @@ namespace deck_check {
     {
         std::cout << std::setfill('0') << std::setw(3) << card
                   << std::setfill(' ')
-                  << ' ' << "Card name " << '\n';
+                  << ' ' << card_names[card] << '\n';
     }
 
     void print_found_deck(const filter_results& results)
@@ -85,13 +88,13 @@ namespace deck_check {
             std::cout << "Please wait..." << std::endl;
             const auto filter = starter_deck_filter(cards);
             const auto results = filter.all_matching_decks();
-            std::cout << '\n';
 
             if (results.numb_of_results() == 1)
-                std::cout << "There is one matching seed.\n";
+                std::cout << "\nThere is 1 matching seed.\n";
             else
-                std::cout << "There are " << results.numb_of_results()
+                std::cout << "\nThere are " << results.numb_of_results()
                           << " matching seeds.\n";
+
             print_hints_or_deck(results);
         } else
             std::cout << "Please enter at least one card.\n" << std::endl;
