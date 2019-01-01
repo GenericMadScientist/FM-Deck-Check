@@ -14,7 +14,7 @@ This is a very simple command-line program. Open up cmd, cd to the directory the
 program is in, and enter the known cards like so:
 
 ```
-> deck_check,exe -c 100 -c 100 -c 8 -c 337
+> deck-check,exe -c 100 -c 100 -c 8 -c 337
 ```
 
 After a few moments the program will print out the number of seeds that match.

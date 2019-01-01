@@ -19,9 +19,9 @@ endif()
 
 find_package(OpenMP REQUIRED)
 add_subdirectory("extern/cxxopts")
-add_executable(deck_check src/deck_filter.cpp src/main.cpp src/options.cpp
+add_executable(deck-check src/deck_filter.cpp src/main.cpp src/options.cpp
     src/rng.cpp)
-target_link_libraries(deck_check PRIVATE OpenMP::OpenMP_CXX cxxopts)
+target_link_libraries(deck-check PRIVATE OpenMP::OpenMP_CXX cxxopts)
 
 include(CTest)
 
