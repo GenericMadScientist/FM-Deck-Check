@@ -14,15 +14,15 @@ namespace deck_check {
         : m{mult}, i{inc} {}
 
         constexpr uint32_t operator()(uint32_t seed) const noexcept
-            {
-                return m * seed + i;
-            }
+        {
+            return m * seed + i;
+        }
         constexpr LinearMap& operator*=(const LinearMap rhs) noexcept
-            {
-                i += m * rhs.i;
-                m *= rhs.m;
-                return *this;
-            }
+        {
+            i += m * rhs.i;
+            m *= rhs.m;
+            return *this;
+        }
     };
 
     constexpr LinearMap operator*(const LinearMap lhs, const LinearMap rhs)
@@ -33,14 +33,9 @@ namespace deck_check {
         return product;
     }
 
-    constexpr LinearMap fm_rng_advance() noexcept
-    {
-        return LinearMap(0x41C64E6D, 0x3039);
-    }
-
     constexpr uint32_t next_seed(uint32_t seed) noexcept
     {
-        return fm_rng_advance()(seed);
+        return 0x41C64E6Du * seed + 0x3039u;
     }
 
     constexpr uint32_t deck_pool_slot(uint32_t seed) noexcept
@@ -60,7 +55,7 @@ namespace deck_check {
             seed += 0x80000000u;
         }
 
-        auto advance = fm_rng_advance();
+        auto advance = LinearMap(0x41C64E6D, 0x3039);
 
         while (n > 0) {
             if (n & 1)
@@ -72,20 +67,19 @@ namespace deck_check {
         return seed;
     }
 
-    constexpr std::array<LinearMap, 723> card_rng_advances()
+    constexpr std::array<LinearMap, 723> card_advances = []()
     {
+        constexpr auto fm_rng_advance = LinearMap(0x41C64E6D, 0x3039);
         auto advances = std::array<LinearMap, 723>();
-        auto current_advance = fm_rng_advance();
+        auto current_advance = fm_rng_advance;
 
         for (auto i = 0; i <= 722; ++i) {
             advances[i] = current_advance;
-            current_advance *= fm_rng_advance();
+            current_advance *= fm_rng_advance;
         }
 
         return advances;
-    }
-
-    constexpr std::array<LinearMap, 723> card_advances = card_rng_advances();
+    }();
 
     constexpr uint32_t advance_to_next_card(int card, uint32_t seed)
     {
