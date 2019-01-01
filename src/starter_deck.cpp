@@ -178,7 +178,7 @@ namespace deck_check {
         if (invalid_cards_in_filter)
             return filter_results();
 
-        auto seed = nth_seed_after(initial_seed, first_frame);
+        auto seed = nth_seed(first_frame);
         auto frames = filter_results();
 
         for (auto i = 0; i < numb_of_frames; ++i) {

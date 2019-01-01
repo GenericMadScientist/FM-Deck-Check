@@ -2,9 +2,9 @@
 #include "starter_deck_data.h"
 
 namespace deck_check {
-    std::array<int, 40> starter_deck(int deck_number)
+    std::array<int, 40> starter_deck(int frame_number)
     {
-        auto seed = nth_seed_after(initial_seed, deck_number);
+        auto seed = nth_seed(frame_number);
         auto cards = std::array<int, 40>();
         auto quantities = std::array<int8_t, 723>();
         auto cards_added = 0;

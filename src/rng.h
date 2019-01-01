@@ -48,10 +48,10 @@ namespace deck_check {
         return (seed >> 16) & 0x7FF;
     }
 
-    constexpr uint32_t initial_seed = 0x55555555;
-
-    constexpr uint32_t nth_seed_after(uint32_t seed, int n) noexcept
+    constexpr uint32_t nth_seed(int n) noexcept
     {
+        auto seed = 0x55555555u;
+
         if (n < 0) {
             // Safe way to add 0x8000000 without integer overflow
             n += 0x7FFFFFFF;

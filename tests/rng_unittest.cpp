@@ -57,10 +57,8 @@ namespace deck_check {
 
     TEST(RngMultiAdvanceTest, MultiAdvances)
     {
-        ASSERT_EQ(nth_seed_after(initial_seed, 0), 0x55555555u);
-        ASSERT_EQ(nth_seed_after(initial_seed, 1000000), 0xFF60ED15u);
-        ASSERT_EQ(nth_seed_after(0, 0), 0u);
-        ASSERT_EQ(nth_seed_after(0, 1000000), 0xA4AFD2C0u);
+        ASSERT_EQ(nth_seed(0), 0x55555555u);
+        ASSERT_EQ(nth_seed(1000000), 0xFF60ED15u);
     }
 
     TEST(StarterDeckTest, LastFourCards)
