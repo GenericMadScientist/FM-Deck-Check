@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <array>
+#include <vector>
 
 #include "gtest/gtest.h"
 
@@ -56,5 +58,13 @@ namespace deck_check {
                   no_results);
         ASSERT_EQ(glitch_card_filter.matching_decks(0, 100).initial_results(),
                   no_results);
+    }
+
+    TEST(HintTest, ManipDecks)
+    {
+        const auto manip_decks = std::vector<int>({706, 711});
+        const auto manip_diffs = std::vector<int>({558, 563});
+
+        ASSERT_EQ(helpful_hints(manip_decks), manip_diffs);
     }
 }

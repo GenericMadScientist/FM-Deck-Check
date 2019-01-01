@@ -77,6 +77,69 @@ namespace deck_check {
         results += rhs.results;
     }
 
+    struct frequency_rating {
+        int16_t card;
+        int8_t quantity;
+        int8_t separation_power;
+    };
+
+    bool freq_rating_comp(const frequency_rating& lhs,
+                          const frequency_rating& rhs) noexcept
+    {
+        if (lhs.separation_power != rhs.separation_power)
+            return lhs.separation_power < rhs.separation_power;
+
+        if (lhs.card != rhs.card)
+            return lhs.card < rhs.card;
+
+        return lhs.quantity < rhs.quantity;
+    }
+
+    std::vector<int> helpful_hints(const std::vector<int>& frames)
+    {
+        auto counts = std::array<std::array<int, 3>, 723>();
+
+        for (const auto frame : frames) {
+            const auto seed = nth_seed_after(initial_seed, frame);
+            const auto deck = starter_deck(seed);
+            auto deck_counts = std::array<int8_t, 723>();
+            for (const auto card : deck)
+                ++deck_counts[card];
+            for (auto i = 1; i < 723; ++i)
+                for (auto j = 0; j < deck_counts[i]; ++j)
+                    ++counts[i][j];
+        }
+
+        auto ratings = std::vector<frequency_rating>();
+
+        for (auto i = 0; i < 723; ++i)
+            for (auto j = 0; j < 3; ++j) {
+                const auto count = counts[i][j];
+                const auto usefulness =
+                    std::min(count,
+                             static_cast<int>(frames.size()) - count);
+                if (usefulness > 0) {
+                    auto rating = frequency_rating();
+                    rating.card = i;
+                    rating.quantity = j + 1;
+                    rating.separation_power = usefulness;
+                    ratings.push_back(rating);
+                }
+            }
+
+        std::sort(ratings.begin(), ratings.end(), freq_rating_comp);
+
+        auto hints = std::vector<int>();
+
+        for (const auto& rating : ratings) {
+            const auto card = rating.card;
+            if (std::find(hints.cbegin(), hints.cend(), card) == hints.cend())
+                hints.push_back(card);
+        }
+
+        return hints;
+    }
+
     starter_deck_filter::starter_deck_filter(const std::vector<int>& cards)
     {
         for (const auto c : cards) {

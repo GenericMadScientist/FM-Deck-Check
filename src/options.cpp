@@ -1,5 +1,5 @@
-#include <cstdlib>
 #include <iostream>
+#include <vector>
 
 #include "options.h"
 #include "starter_deck.h"

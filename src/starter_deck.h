@@ -49,6 +49,8 @@ namespace deck_check {
         }
     };
 
+    std::vector<int> helpful_hints(const std::vector<int>& frames);
+
     class starter_deck_filter {
     private:
         std::array<int8_t, 723> card_counts = std::array<int8_t, 723>();
