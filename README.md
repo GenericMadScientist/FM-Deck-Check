@@ -25,4 +25,4 @@ help in working out the deck.
 ## Contact
 
 If you have any bug reports I would prefer they be reported on the GitHub page,
-but this isn't required. My Discord is GMS#5303.
+but this isn't required. My Discord is genericmadscientist.
